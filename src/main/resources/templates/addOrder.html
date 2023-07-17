@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>데이터베이스프로그래밍</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+</head>
+<body class="d-flex justify-content-center align-items-center" style="width: 100vw; height: 100vh;">
+<form action="/addOrder" method="post">
+    <div class="d-flex flex-column align-items-center">
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">주문자</label>
+            <input class="form-control m-1" type="text" th:value="${orderForm.getMemberId()}" style="width: 14rem;"
+                   disabled>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">주문 제품</label>
+            <input class="form-control m-1" type="text" th:value="${orderForm.getProductName()}"
+                   style="width: 14rem;" disabled>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">제품 가격</label>
+            <input class="form-control m-1" type="text" name="productPrice" id="productPrice" th:value="${orderForm.getProductPrice()}" style="width: 14rem;"
+                   disabled>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">주문 수량</label>
+            <input class="form-control m-1" type="text" th:value="${orderForm.getProductNum()}" name="productNum" style="width: 14rem;" onkeyup="updateTotal(this.value)">
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">배송지</label>
+            <select class="form-control m-1" type="text" name="addressId" style="width: 14rem;" required>
+                <th:block th:each="addr: ${addressList}">
+                    <option th:value="${addr.getId()}" th:text="${addr.getName()}"></option>
+                </th:block>
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <label style="width: 4rem;">TOTAL</label>
+            <input class="form-control m-1" type="text" name="totalPrice" id="totalPrice" th:value="${orderForm.getProductPrice() * orderForm.getProductNum()}"
+                   style="width: 14rem;" disabled>
+        </div>
+
+        <input style="display: none;" th:value="${orderForm.getMemberId()}" name="memberId">
+        <input style="display: none;" th:value="${orderForm.getProductId()}" name="productId">
+        <input style="display: none;" th:value="${orderForm.getProductName()}" name="productName">
+        <input style="display: none;" th:value="${orderForm.getProductPrice()}" name="productPrice">
+        <input style="display: none;" th:value="${orderForm.getInCart()}" name="inCart">
+        <input style="display: none;" name="totalPrice" id="submitTotal">
+
+        <button class="btn btn-lg btn-info m-1 w-100" style="height: 38px; font-size: 1rem; color: white!important;"
+                type="submit">주문하기
+        </button>
+        <p><a class="text-info hover-text-black hover-cursor-pointer text-decoration-none" onclick="history.back();">이전
+            페이지로
+            돌아가기</a></p>
+    </div>
+</form>
+
+<div id="msg" th:text="${msg}" style="display: none;"></div>
+<script>
+    $(document).ready(function () {
+        let msg = $("#msg").text();
+        if (msg.length > 0) {
+            window.alert(msg);
+        }
+    });
+
+    function updateTotal(num) {
+        let price = $('#productPrice').val();
+        $('#totalPrice').val(Number(price) * Number(num));
+        $('#submitTotal').val($('#totalPrice').val());
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>데이터베이스프로그래밍</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="/js/script.js"></script>
+</head>
+<body style="width: 100vw; height: 100vh;">
+<div class="position-absolute center-center">
+    <div class="row col align-items-center justify-content-end mb-3" style="text-align: right;">
+        <a class="btn btn-none dropdown-toggle" id="dropdownMenuButton1"
+           data-bs-toggle="dropdown" aria-expanded="false" style="text-align: right; width: 8rem; font-size: 1.2rem;"
+           th:text="${member.id + ' 님'}"/>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="width: 6rem;">
+            <li class="dropdown-item hover-cursor-pointer" onclick="location.href='/address'">배송지 목록</button></li>
+            <li class="dropdown-item hover-cursor-pointer" onclick="location.href='/cart'">장바구니 목록</button></li>
+            <li class="dropdown-item hover-cursor-pointer" onclick="location.href='/order'">주문 목록</button></li>
+            <li class="dropdown-item hover-cursor-pointer" onclick="location.href='/myreview'">리뷰 목록</button></li>
+        </ul>
+        <div style="width: 0.1rem;"></div>
+        <button class="btn btn-secondary" style="width: 5.5rem; height: 2.5rem;" type="button"
+                onclick="location.href='/logout'">
+            로그아웃
+        </button>
+        <div style="width: 0.3rem;"></div>
+    </div>
+
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item list-group-item-info" style="width: 20rem;">이름</li>
+        <li class="list-group-item list-group-item-info" style="width: 20rem;">설명</li>
+        <li class="list-group-item list-group-item-info" style="width: 6rem;">가격</li>
+        <li class="list-group-item list-group-item-info" style="width: 4rem;">별점</li>
+        <li class="list-group-item list-group-item-info" style="width: 21rem;"></li>
+    </ul>
+    <th:block th:each="product : ${products}">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item" style="width: 20rem;" th:text="${product.getName()}"></li>
+            <li class="list-group-item" style="width: 20rem;" th:text="${product.getDetail()}"></li>
+            <li class="list-group-item" style="width: 6rem;"
+                th:text="${#numbers.formatInteger(product.getPrice(), 3, 'COMMA')}"></li>
+            <li class="list-group-item" style="width: 4rem;" th:text="${product.getRating()}"></li>
+            <li class="list-group-item" style="width: 7rem;">
+                <form action="/addCart" method="post">
+                    <input style="display: none;" th:value="${product.getId()}" name="productId">
+                    <button class="btn btn-secondary" style="width: 5.5rem; height: 2.5rem;" type="submit">
+                        장바구니
+                    </button>
+                </form>
+            </li>
+            <li class="list-group-item" style="width: 7rem;">
+                <form action="/addOrder" method="get">
+                    <input style="display: none;" th:value="${product.getId()}" name="productId">
+                    <button class="btn btn-info" style="width: 5.5rem; height: 2.5rem;" type="submit">
+                        주문하기
+                    </button>
+                </form>
+            </li>
+            <li class="list-group-item" style="width: 7rem;">
+                <form action="/review" method="get">
+                    <input style="display: none;" th:value="${product.getId()}" name="productId">
+                    <button class="btn btn-light" style="width: 5.5rem; height: 2.5rem;" type="submit">
+                        리뷰보기
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </th:block>
+</div>
+
+<div id="cartMsg" th:text="${cartMsg}" style="display: none;"></div>
+<div id="msg" th:text="${msg}" style="display: none;"></div>
+<div id="orderMsg" th:text="${orderMsg}" style="display: none;"></div>
+<script>
+    $(document).ready(function () {
+        let cartMsg = $("#cartMsg").text();
+        if (cartMsg.length > 0) {
+            if (confirm(cartMsg)) {
+                location.href = '/cart';
+            }
+        }
+
+        let msg = $("#msg").text();
+        if (msg.length > 0) {
+            window.alert(msg);
+        }
+
+        let orderMsg = $("#orderMsg").text();
+        if (orderMsg.length > 0) {
+            if (orderMsg == 'success') {
+                if (window.confirm('주문이 완료되었습니다.\n주문 목록으로 이동하시겠습니까?')) {
+                    location.href = '/order';
+                }
+            } else {
+                window.alert(orderMsg);
+            }
+        }
+    });
+</script>
+</body>
+</html>

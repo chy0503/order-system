@@ -1,0 +1,4 @@
+.center-center {left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.hover-text-black:hover {color: black!important;}
+.hover-cursor-pointer:hover {cursor: pointer;}
+.btn-none, btn-none:active, btn-none:focus {color: black; background: none; border: none!important;}

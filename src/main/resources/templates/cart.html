@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>데이터베이스프로그래밍</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body class="d-flex justify-content-center align-items-center" style="width: 100vw; height: 100vh;">
+<div class="d-flex flex-column align-items-center">
+    <div class="row col align-items-center d-flex justify-content-between mb-3 w-100" style="text-align: right;">
+        <a class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+           style="width: 30%; text-align: left;" href="/main">이전
+            페이지로 돌아가기</a>
+
+        <div class="w-50">
+            <th:block th:if="${cartList.size() > 0}">
+                <a class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+                   type="button" href="/addAllCartOrder">
+                    장바구니 전체 주문</a>
+                /
+            </th:block>
+            <a class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+               type="button"
+               onclick="document.getElementById('deleteAllCartBtn').click()">
+                장바구니 전체 삭제</a>
+            <form action="/addAllCartOrder" method="post">
+                <button class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+                        id="addAllCartOrderBtn"
+                        style="display: none;" type="submit">
+                    장바구니 전체 주문
+                </button>
+            </form>
+            <form action="/deleteAllCart" method="post">
+                <button class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+                        id="deleteAllCartBtn"
+                        style="display: none;" type="submit">
+                    장바구니 전체 삭제
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${cartList.size() == 0}" style="width: 47rem;" class="text-center mt-5">
+        <h3>장바구니가 비었습니다.</h3>
+    </div>
+    <th:block th:if="${cartList.size() != 0}">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item list-group-item-info" style="width: 20rem;">이름</li>
+            <li class="list-group-item list-group-item-info" style="width: 20rem;">설명</li>
+            <li class="list-group-item list-group-item-info" style="width: 6rem;">가격</li>
+            <li class="list-group-item list-group-item-info" style="width: 4rem;">수량</li>
+            <li class="list-group-item list-group-item-info" style="width: 14rem;"></li>
+        </ul>
+        <th:block th:each="cart : ${cartList}">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="width: 20rem;" th:text="${cart.getProductName()}"></li>
+                <li class="list-group-item" style="width: 20rem;" th:text="${cart.getProductDetail()}"></li>
+                <li class="list-group-item" style="width: 6rem;" th:text="${cart.getProductPrice()}"></li>
+                <li class="list-group-item" style="width: 4rem;" th:text="${cart.getNum()}"></li>
+                <li class="list-group-item align-items-center" style="width: 7rem;">
+                    <form action="/deleteCart" method="post">
+                        <input style="display: none;" th:value="${cart.getId()}" name="cartId">
+                        <button class="btn btn-secondary" style="width: 5.5rem;" type="submit">
+                            삭제하기
+                        </button>
+                    </form>
+                </li>
+                <li class="list-group-item align-items-center" style="width: 7rem;">
+                    <form action="/addCartOrder" method="get">
+                        <input style="display: none;" th:value="${cart.getId()}" name="cartId">
+                        <button class="btn btn-info" style="width: 5.5rem;" type="submit">
+                            주문하기
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </th:block>
+    </th:block>
+</div>
+
+<div id="deleteMsg" th:text="${deleteMsg}" style="display: none;"></div>
+<div id="deleteAllMsg" th:text="${deleteAllMsg}" style="display: none;"></div>
+<script>
+    $(document).ready(function () {
+        let deleteMsg = $("#deleteMsg").text();
+        if (deleteMsg.length > 0) {
+            if (deleteMsg == 'success') {
+                window.alert('장바구니가 삭제되었습니다.');
+            }
+        }
+
+        let deleteAllMsg = $('#deleteAllMsg').text();
+        if (deleteAllMsg.length > 0) {
+            if (deleteAllMsg == 'success') {
+                window.alert('장바구니가 모두 삭제되었습니다.');
+            }
+        }
+    });
+</script>
+</body>
+</html>

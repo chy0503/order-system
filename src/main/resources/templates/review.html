@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>데이터베이스프로그래밍</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body class="d-flex justify-content-center align-items-center" style="width: 100vw; height: 100vh;">
+<div class="d-flex flex-column align-items-center">
+    <div class="row col align-items-center d-flex justify-content-between mb-3 w-100" style="text-align: right;">
+        <a class="text-info hover-text-black hover-cursor-pointer text-decoration-none"
+           style="width: 30%; text-align: left;" href="/main">이전
+            페이지로 돌아가기</a>
+    </div>
+
+    <div th:if="${reviewList.size() == 0}" style="width: 47rem;" class="text-center mt-5">
+        <h3>작성한 리뷰가 없습니다.</h3>
+    </div>
+    <th:block th:if="${reviewList.size() != 0}">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item list-group-item-info" style="width: 20rem;">상품명</li>
+            <li class="list-group-item list-group-item-info" style="width: 20rem;">상품 설명</li>
+            <li class="list-group-item list-group-item-info" style="width: 10rem;">작성자</li>
+            <li class="list-group-item list-group-item-info" style="width: 20rem;">리뷰 내용</li>
+            <li class="list-group-item list-group-item-info" style="width: 4rem;">별점</li>
+        </ul>
+        <th:block th:each="review : ${reviewList}">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item" style="width: 20rem;" th:text="${review.getProductName()}"></li>
+                <li class="list-group-item" style="width: 20rem;" th:text="${review.getProductDetail()}"></li>
+                <li class="list-group-item" style="width: 10rem;" th:text="${review.getMemberId()}"></li>
+                <li class="list-group-item" style="width: 20rem;" th:text="${review.getContent()}"></li>
+                <li class="list-group-item" style="width: 4rem;" th:text="${review.getRating()}"></li>
+            </ul>
+        </th:block>
+    </th:block>
+</div>
+</body>
+</html>
