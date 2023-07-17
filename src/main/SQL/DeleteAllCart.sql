@@ -1,0 +1,6 @@
+CREATE OR REPLACE PROCEDURE DeleteAllCart(mId IN VARCHAR2, errorMsg OUT VARCHAR2)
+IS
+    
+BEGIN
+    DELETE FROM cart WHERE m_id = mId;
+END;
